@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Producto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container">
+      <a class="navbar-brand" href="#">Tienda Online</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./administracion.html">Comentarios y calificaciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./devoluciones.html">Devolución</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./productos.html">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./sucursales.html">Sucursales</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<body class="bg-light">
+    <div class="container mt-5 p-4 bg-white shadow rounded">
+        <h1 class="text-center mb-4">Registrar Producto</h1>
+        <form id="formCliente">
+            <!-- Cliente ID -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="productoId" class="form-label">Producto ID</label>
+                    <input type="number" class="form-control" id="productoId" name="productoId" placeholder="Ingrese el ID del producto4" required>
+                </div>
+            </div>
+
+            <!-- Nombre, Correo, Latitud y Longitud -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre del Producto</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="number" step="any" class="form-control" id="precio" name="precio" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="stock" class="form-label">Stock</label>
+                    <input type="number" step="any" class="form-control" id="stock" name="stock" required>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" id="registrarProducto">Registrar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("registrarProducto").addEventListener("click", async () => {
+    const productoId = document.getElementById("productoId").value;
+    const nombre = document.getElementById("nombre").value;
+    const descripcion = document.getElementById("descripcion").value;
+    const precio = document.getElementById("precio").value;
+    const stock = document.getElementById("stock").value;
+
+    const productoData = {
+        productoId: productoId,
+        nombre: nombre,
+        descripcion: descripcion,
+        precio: precio,
+        stock: stock,
+    };
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/insertar_producto", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(productoData),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+        } else {
+            alert("Error: " + result.error);
+        }
+    } catch (error) {
+        console.error("Error al guardar el producto:", error);
+    }
+});
+
+    </script>
+</body>
+</html>

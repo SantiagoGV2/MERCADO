@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Clientes y Sucursales</title>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQStlK4ZjCxkSTu2GgY4VJh0gLw7maQoA&libraries=places&loading=lazy"
+        async defer></script>
+        <script>
+            let map;
+            let geocoder;
+        
+            // Función para inicializar el mapa
+            async function initMap() {
+                const { Map } = await google.maps.importLibrary("maps");
+                await google.maps.importLibrary("places");
+        
+                // Inicializa el mapa
+                map = new Map(document.getElementById("map"), {
+                    center: { lat: 4.632539102166865, lng: -74.08081778835967 },
+                    zoom: 12,
+                });
+        
+                // Inicializa el geocoder
+                geocoder = new google.maps.Geocoder();
+        
+                // Obtiene los puntos desde Flask
+                fetch('http://127.0.0.1:5000/get_locations')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Define los íconos personalizados
+                        const clienteIcon = {
+                            url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Ícono azul para clientes
+                        };
+                        const sucursalIcon = {
+                            url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png", // Ícono verde para sucursales
+                        };
+        
+                        // Agregar marcadores de los clientes
+                        data.clientes.forEach(cliente => {
+                            if (isNaN(cliente.latitud) || isNaN(cliente.longitud)) {
+                                console.error('Coordenadas inválidas para el cliente:', cliente);
+                            } else {
+                                new google.maps.Marker({
+                                    position: { lat: parseFloat(cliente.latitud), lng: parseFloat(cliente.longitud) },
+                                    map: map,
+                                    title: cliente.nombre,
+                                    icon: clienteIcon, // Usa el ícono azul para clientes
+                                });
+                            }
+                        });
+        
+                        // Agregar marcadores de las sucursales
+                        data.sucursales.forEach(sucursal => {
+                            if (isNaN(sucursal.latitud) || isNaN(sucursal.longitud)) {
+                                console.error('Coordenadas inválidas para la sucursal:', sucursal);
+                            } else {
+                                new google.maps.Marker({
+                                    position: { lat: parseFloat(sucursal.latitud), lng: parseFloat(sucursal.longitud) },
+                                    map: map,
+                                    title: sucursal.nombre,
+                                    icon: sucursalIcon, // Usa el ícono verde para sucursales
+                                });
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error cargando las ubicaciones:', error));
+            }
+        
+            // Inicializar el mapa cuando la ventana se cargue completamente
+            window.onload = initMap;
+        </script>        
+</head>
+
+<body>
+    <h1>Mapa de Clientes y Sucursales</h1>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+</body>
+
+</html>

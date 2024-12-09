@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container">
+      <a class="navbar-brand" href="#">Tienda Online</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./administracion.html">Comentarios y calificaciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./devoluciones.html">Devolución</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./productos.html">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./sucursales.html">Sucursales</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<body class="bg-light">
+    <div class="container mt-5 p-4 bg-white shadow rounded">
+        <h1 class="text-center mb-4">Registrar Sucursales</h1>
+        <form id="formCompra">
+            <!-- Cliente ID -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="sucursalId" class="form-label">Sucursal ID</label>
+                    <input type="number" class="form-control" id="sucursalId" name="sucursalId" placeholder="Ingrese el ID de la sucursal" required>
+                </div>
+            </div>
+
+            <!-- Nombre, Correo, Latitud y Longitud -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre de la sucursal" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="direccionCasa" class="form-label">Direccion de residencia</label>
+                    <input type="text" step="any" class="form-control" id="direccionCasa" name="direccionCasa" placeholder="Ingrese la direccion" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="latitud" class="form-label">Latitud</label>
+                    <input type="number" step="any" class="form-control" id="latitud" name="latitud" placeholder="Ingrese la latitud" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="longitud" class="form-label">Longitud</label>
+                    <input type="number" step="any" class="form-control" id="longitud" name="longitud" placeholder="Ingrese la longitud" required>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" id="registrarSucursal">Registrar</button>
+            </div>
+        </form>
+
+        <!-- Mapa -->
+        <div class="mt-4">
+            <div id="map" style="height: 400px; width: 100%;"></div>
+        </div>
+    </div>
+
+   <!-- Scripts -->
+   <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "AIzaSyAQStlK4ZjCxkSTu2GgY4VJh0gLw7maQoA",
+      v: "weekly",
+      // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+      // Add other bootstrap parameters as needed, using camel case.
+    });
+  </script>
+<script src="/js/api.js"></script>
+
+<script>
+    document.getElementById("registrarSucursal").addEventListener("click", async () => {
+const sucursalId = document.getElementById("sucursalId").value;
+const nombre = document.getElementById("nombre").value;
+const latitud = document.getElementById("latitud").value;
+const longitud = document.getElementById("longitud").value;
+
+const clienteData = {
+    sucursalId: sucursalId,
+    nombre: nombre,
+    latitud: latitud,
+    longitud: longitud,
+};
+
+try {
+    const response = await fetch("http://127.0.0.1:5000/insertar_sucursal", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(clienteData),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+        alert(result.message);
+    } else {
+        alert("Error: " + result.error);
+    }
+} catch (error) {
+    console.error("Error al guardar la sucursal:", error);
+}
+});
+
+</script>
+</body>
+</html>

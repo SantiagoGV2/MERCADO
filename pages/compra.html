@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Compra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container">
+      <a class="navbar-brand" href="#">Tienda Online</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/index.html">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./devoluciones.html">Devolución</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<body class="bg-light">
+    <div class="container mt-5 p-4 bg-white shadow rounded">
+        <h1 class="text-center mb-4">Registrar Compra</h1>
+        <form id="formCompra">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="compraId" class="form-label">Compra ID</label>
+                    <input type="number" class="form-control" id="compraId" name="compraId" placeholder="Ingrese el ID de la compra" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="clienteId" class="form-label">Cliente ID</label>
+                    <select class="form-select" id="clienteId" name="clienteId" required>
+                        <option value="" disabled selected>Seleccione un Cliente</option>
+                        <option value="101">Cliente 101</option>
+                        <option value="102">Cliente 102</option>
+                        <option value="103">Cliente 103</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="productoId" class="form-label">Producto ID</label>
+                    <select class="form-select" id="productoId" name="productoId" required>
+                        <option value="" disabled selected>Seleccione un Producto</option>
+                        <option value="201">Producto 201</option>
+                        <option value="202">Producto 202</option>
+                        <option value="203">Producto 203</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="sucursalId" class="form-label">Sucursal ID</label>
+                    <select class="form-select" id="sucursalId" name="sucursalId" required>
+                        <option value="" disabled selected>Seleccione una Sucursal</option>
+                        <option value="301">Sucursal 301</option>
+                        <option value="302">Sucursal 302</option>
+                        <option value="303">Sucursal 303</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" id="registrarCompra">Registrar Compra</button>
+                <a href="./calificaciones.html"><button type="button" class="btn btn-secondary" id="calificarProducto">Calificar Producto</button></a>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Llamada para cargar clientes, productos y sucursales de la base de datos
+        async function cargarDatos() {
+            try {
+                const clientesResponse = await fetch("http://127.0.0.1:5000/obtener_clientes");
+                const productosResponse = await fetch("http://127.0.0.1:5000/obtener_productos");
+                const sucursalesResponse = await fetch("http://127.0.0.1:5000/obtener_sucursales");
+    
+                if (clientesResponse.ok && productosResponse.ok && sucursalesResponse.ok) {
+                    const clientes = await clientesResponse.json();
+                    const productos = await productosResponse.json();
+                    const sucursales = await sucursalesResponse.json();
+    
+                    // Poblar los select con los datos obtenidos
+                    const clienteSelect = document.getElementById("clienteId");
+                    clientes.forEach(cliente => {
+                        const option = document.createElement("option");
+                        option.value = cliente.id;
+                        option.textContent = `${cliente.id} - ${cliente.nombre}`;
+                        clienteSelect.appendChild(option);
+                    });
+    
+                    const productoSelect = document.getElementById("productoId");
+                    productos.forEach(producto => {
+                        const option = document.createElement("option");
+                        option.value = producto.id;
+                        option.textContent = `${producto.id} - ${producto.nombre}`;
+                        productoSelect.appendChild(option);
+                    });
+    
+                    const sucursalSelect = document.getElementById("sucursalId");
+                    sucursales.forEach(sucursal => {
+                        const option = document.createElement("option");
+                        option.value = sucursal.id;
+                        option.textContent = `${sucursal.id} - ${sucursal.nombre}`;
+                        sucursalSelect.appendChild(option);
+                    });
+                } else {
+                    alert("Hubo un problema al obtener los datos.");
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos:", error);
+                alert("Hubo un error al cargar los datos.");
+            }
+        }
+    
+        // Cargar los datos cuando se carga la página
+        window.onload = cargarDatos;
+    </script>
+    <script>
+        document.getElementById("registrarCompra").addEventListener("click", async function() {
+            const compraId = document.getElementById("compraId").value;
+            const clienteId = document.getElementById("clienteId").value;
+            const productoId = document.getElementById("productoId").value;
+            const sucursalId = document.getElementById("sucursalId").value;
+    
+            try {
+                const response = await axios.post("http://127.0.0.1:5000/insertar_compra", {
+                    compraId,
+                    clienteId,
+                    productoId,
+                    sucursalId
+                });
+                alert(response.data.message);
+            } catch (error) {
+                alert("Error al registrar la compra.");
+            }
+        });
+    </script>
+</body>
+</html>

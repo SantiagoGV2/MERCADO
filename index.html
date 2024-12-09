@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Principal de Compras</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container">
+      <a class="navbar-brand" href="#">Tienda Online</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#productos">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./pages/devoluciones.html">Devolución</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="container text-center py-5">
+    <h1 class="mb-4">Bienvenido a Nuestra Tienda</h1>
+    <p class="lead">Encuentra los mejores productos al mejor precio</p>
+    <a href="./pages/clientes.html" class="btn btn-primary btn-lg">Cliente</a>
+    <a href="./pages/productos.html" class="btn btn-primary btn-lg">Administrador</a>
+  </div>
+<hr>
+ <!-- Productos -->
+ <div class="container py-5" id="productos">
+  <h2 class="text-center mb-4">Nuestros Productos</h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4" id="productos-list">
+    <!-- Los productos serán cargados dinámicamente aquí -->
+  </div>
+</div>
+
+  <!-- Footer -->
+  <footer class="bg-light py-3">
+    <div class="container text-center">
+      <p class="mb-0">© 2024 Tienda Online. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  fetch("http://127.0.0.1:5000/obtener_todos_productos")
+    .then(response => response.json())
+    .then(data => {
+      const productosList = document.getElementById("productos-list");
+      data.forEach(producto => {
+        const productoCard = `
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">${producto.nombre}</h5>
+                <p class="card-text">${producto.descripcion}</p>
+                <p class="card-text"><strong>Precio:</strong> $${producto.precio}</p>
+                <p class="card-text"><strong>Stock:</strong> ${producto.stock}</p>
+                <a href="./pages/compra.html"><button type="button" class="btn btn-primary" id="calificarProducto">Comprar</button></a>
+              </div>
+            </div>
+          </div>
+        `;
+        productosList.innerHTML += productoCard;
+      });
+    })
+    .catch(error => console.error("Error al cargar productos:", error));
+});
+  </script>
+</body>
+</html>
