@@ -1,4 +1,3 @@
-from pymongo import MongoClient
 import mysql.connector
 
 # Establece la conexión con la base de datos MySQL
@@ -9,11 +8,6 @@ mysql_conn = mysql.connector.connect(
     database="entrega"
 )
 cursor = mysql_conn.cursor(dictionary=True)
-
-# Establece la conexión con la base de datos MongoDB
-client = MongoClient("mongodb+srv://root:12345@entregafinal.ug2cb.mongodb.net/")
-mongo_db = client["entregaFinal"]
-
 def insertar_compra(compra_id,cliente_id, producto_id, sucursal_id):
     try:
         # Inserta los datos en la tabla Compras

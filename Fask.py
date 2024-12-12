@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from pymongo import MongoClient
 from flask_cors import CORS  # Importar CORS
 from cone import obtener_clientes, obtener_productos, obtener_sucursales, insertar_compra, insertar_producto, obtener_todos_productos,insertar_cliente,obtener_compras, insertar_devolucion,insertar_sucursal,obtener_ubi_clientes,obtener_ubi_sucursales
 
@@ -6,6 +7,47 @@ app = Flask(__name__)
 
 # Habilitar CORS para todas las rutas
 CORS(app)
+
+#Insertar comentarios
+try:
+    client = MongoClient("mongodb+srv://root:12345@entregafinal.ug2cb.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true")
+    mongo_db = client["entregaFinal"]
+    print("Conexión exitosa")
+except Exception as e:
+    print("Error en la conexión:", e)
+
+comments_collection = mongo_db["Comentarios"]
+
+# Ruta para insertar un comentario
+@app.route("/insertar_comentarios", methods=["POST"])
+def insertar_comentario():
+    try:
+        data = request.json
+        print("Datos recibidos:", data)
+        nuevo_comentario = {
+            "customer_name": data["clienteId"],
+            "productid": data["productoId"],
+            "comment": data["comentario"],
+            "rating": int(data["calificacion"])
+        }
+        comments_collection.insert_one(nuevo_comentario)
+        print("Comentario insertado:", nuevo_comentario)
+        return jsonify({"mensaje": "Comentario registrado exitosamente"}), 201
+    except Exception as e:
+        print("Error al insertar comentario:", e)
+        return jsonify({"error": str(e)}), 500
+
+    
+# Ruta para obtener todos los comentarios
+@app.route("/comentarios/todos", methods=["GET"])
+def obtener_todos_comentarios():
+    try:
+        comentarios = list(comments_collection.find({}))
+        for comentario in comentarios:
+            comentario["_id"] = str(comentario["_id"])  # Convertir ObjectId a string
+        return jsonify(comentarios), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 #Ruta para obtener compras
 @app.route("/obtener_compras", methods=["GET"])
@@ -138,6 +180,8 @@ def get_locations():
         return jsonify(clientes=clientes, sucursales=sucursales), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
 
 
 if __name__ == "__main__":

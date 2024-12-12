@@ -1,138 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Califica el Producto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Califica el Producto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
-        <div class="container">
-          <a class="navbar-brand" href="#">Tienda Online</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="/index.html">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/index.html">Productos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./compra.html">Compra</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./devoluciones.html">Devolución</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-    </nav>
-
-    <!-- Formulario de calificación -->
-    <div class="container mt-5 p-4 bg-white shadow rounded">
-        <h4 class="text-center mb-4">Califica el producto</h4>
-        <form id="comentario-form">
-            <!-- Producto -->
-            <div class="mb-3">
-                <label for="productoId" class="form-label">Producto</label>
-                <select class="form-select" id="productoId" name="productoId" required>
-                    <option value="" disabled selected>Seleccione un Producto</option>
-                    <option value="201">Producto 201</option>
-                    <option value="202">Producto 202</option>
-                    <option value="203">Producto 203</option>
-                </select>
-            </div>
-
-            <!-- Cliente -->
-            <div class="mb-3">
-                <label for="clienteId" class="form-label">Cliente</label>
-                <select class="form-select" id="clienteId" name="clienteId" required>
-                    <option value="" disabled selected>Seleccione un Cliente</option>
-                    <option value="1">Cliente 1</option>
-                    <option value="2">Cliente 2</option>
-                    <option value="3">Cliente 3</option>
-                </select>
-            </div>
-
-            <!-- Comentario -->
-            <div class="mb-3">
-                <label for="comentario" class="form-label">Comentario</label>
-                <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
-            </div>
-
-            <!-- Calificación -->
-            <div class="mb-3">
-                <label for="calificacion" class="form-label">Calificación</label>
-                <input type="number" class="form-control" id="calificacion" name="calificacion" min="1" max="5" required>
-            </div>
-
-            <button type="submit" class="btn btn-warning w-100">Enviar</button>
-        </form>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container">
+      <a class="navbar-brand" href="#">Tienda Online</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/index.html">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./compra.html">Compra</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./devoluciones.html">Devolución</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        async function cargarProductos() {
-            try {
-                const response = await axios.get("http://127.0.0.1:5000/productos");
-                const productos = response.data;
-                const productoSelect = document.getElementById("productoId");
+  <!-- Formulario de calificación -->
+  <div class="container mt-5 p-4 bg-white shadow rounded">
+    <h4 class="text-center mb-4">Califica el producto</h4>
+    <form id="comentario-form">
 
-                productos.forEach(producto => {
-                    const option = document.createElement("option");
-                    option.value = producto.id;
-                    option.textContent = `Producto ${producto.id}`;
-                    productoSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error("Error al cargar los productos:", error);
-                alert("No se pudieron cargar los productos.");
-            }
-        }
+      <!-- Cliente -->
+      <div class="mb-3">
+        <label for="clienteId" class="form-label">Cliente</label>
+        <input type="text" class="form-control" id="clienteId" name="clienteId" placeholder="Ingrese su nombre"
+          required>
+      </div>
+      <!-- Producto -->
+      <div class="mb-3">
+        <label for="productoId" class="form-label">Producto</label>
+        <input type="text" class="form-control" id="productoId" name="productoId"
+          placeholder="Ingrese el nombre del producto" required>
+      </div>
 
-        async function cargarClientes() {
-            try {
-                const response = await axios.get("http://127.0.0.1:5000/clientes");
-                const clientes = response.data;
-                const clienteSelect = document.getElementById("clienteId");
+      <!-- Comentario -->
+      <div class="mb-3">
+        <label for="comentario" class="form-label">Comentario</label>
+        <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
+      </div>
 
-                clientes.forEach(cliente => {
-                    const option = document.createElement("option");
-                    option.value = cliente.id;
-                    option.textContent = `Cliente ${cliente.id}`;
-                    clienteSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error("Error al cargar los clientes:", error);
-                alert("No se pudieron cargar los clientes.");
-            }
-        }
+      <!-- Calificación -->
+      <div class="mb-3">
+        <label for="calificacion" class="form-label">Calificación</label>
+        <input type="number" class="form-control" id="calificacion" name="calificacion" min="1" max="5" required>
+      </div>
 
-        document.getElementById("comentario-form").addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const data = {
-                productoId: document.getElementById("productoId").value,
-                clienteId: document.getElementById("clienteId").value,
-                comentario: document.getElementById("comentario").value,
-                calificacion: document.getElementById("calificacion").value,
-            };
-
-            try {
-                const response = await axios.post("http://127.0.0.1:5000/comentarios", data);
-                alert(response.data.mensaje);  
-            } catch (error) {
-                console.error("Error al enviar el comentario:", error);
-                alert("Hubo un error al enviar el comentario.");
-            }
-        });
-
-        cargarProductos();
-        cargarClientes();
-    </script>
+      <button type="submit" class="btn btn-warning w-100">Enviar</button>
+    </form>
+  </div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  // Opcional: Cargar comentarios al enviar un nuevo comentario
+  document.getElementById('comentario-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const productoId = document.getElementById('productoId').value;
+
+    // Enviar comentario
+    try {
+      const data = {
+        productoId: productoId,
+        clienteId: document.getElementById('clienteId').value,
+        comentario: document.getElementById('comentario').value,
+        calificacion: document.getElementById('calificacion').value
+      };
+
+      const response = await axios.post("http://127.0.0.1:5000/insertar_comentarios", data);
+
+      if (response.status === 201) {
+        alert("Comentario enviado exitosamente.");
+        // Recargar comentarios automáticamente después de enviar
+        cargarComentarios(productoId);
+      } else {
+        alert("Hubo un problema al enviar el comentario.");
+      }
+    } catch (error) {
+      console.error("Error al enviar el comentario:", error.response ? error.response.data : error.message);
+    }
+  });
+
+</script>
+</body>
+
 </html>

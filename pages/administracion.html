@@ -1,89 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calificaciones</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calificaciones</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
-        <div class="container">
-          <a class="navbar-brand" href="#">Tienda Online</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="/index.html">Inicio</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./administracion.html">Comentarios y calificaciones</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./devoluciones.html">Devolución</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./productos.html">Productos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./sucursales.html">Sucursales</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-    <!-- Table Container -->
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-dark text-white text-center">
-                <h4>Adm_Calificaciones</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th scope="col" class="text-center">Producto</th>
-                                <th scope="col" class="text-center">Comentarios</th>
-                                <th scope="col" class="text-center">Calificaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center">Producto 1</td>
-                                <td class="text-center">Comentario 1</td>
-                                <td class="text-center">5</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">Producto 2</td>
-                                <td class="text-center">Comentario 2</td>
-                                <td class="text-center">4</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">Producto 3</td>
-                                <td class="text-center">Comentario 3</td>
-                                <td class="text-center">3</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">Producto 4</td>
-                                <td class="text-center">Comentario 4</td>
-                                <td class="text-center">5</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">Producto 5</td>
-                                <td class="text-center">Comentario 5</td>
-                                <td class="text-center">2</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+    <div class="container">
+      <a class="navbar-brand" href="#">Tienda Online</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="/index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./administracion.html">Comentarios y calificaciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./devoluciones.html">Devolución</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./productos.html">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./sucursales.html">Sucursales</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
+  <main>
+    <div class="container-fluid mt-5 p-4 bg-white shadow rounded">
+      <h4 class="text-center mb-4">Todos los Comentarios</h4>
+      <div id="comentarios-container" class="table-responsive">
+        <!-- Aquí se mostrarán los comentarios -->
+      </div>
+    </div>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+    async function cargarTodosLosComentarios() {
+    try {
+        const contenedorComentarios = document.getElementById('comentarios-container');
+        contenedorComentarios.innerHTML = ''; // Limpiar contenido anterior
+
+        // Crear una tabla para mostrar los comentarios
+        const tablaComentarios = document.createElement('table');
+        tablaComentarios.classList.add('table', 'table-striped', 'table-hover', 'table-responsive');
+        
+        // Encabezados de la tabla
+        tablaComentarios.innerHTML = `
+            <thead class="table-warning">
+                <tr>
+                    <th>Cliente ID</th>
+                    <th>Producto ID</th>
+                    <th>Comentario</th>
+                    <th>Calificación</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-body-comentarios"></tbody>
+        `;
+
+        contenedorComentarios.appendChild(tablaComentarios);
+        const tablaBody = document.getElementById('tabla-body-comentarios');
+
+        // Realizar la solicitud para obtener todos los comentarios
+        const response = await axios.get('http://127.0.0.1:5000/comentarios/todos');
+        
+        // Verificar si hay comentarios
+        if (response.data.length === 0) {
+            tablaBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-muted">
+                        No hay comentarios disponibles.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        // Agregar cada comentario a la tabla
+        response.data.forEach(comentario => {
+            const filaComentario = document.createElement('tr');
+            
+            // Generar estrellas para la calificación
+            const estrellas = '★'.repeat(comentario.rating) + '☆'.repeat(5 - comentario.rating);
+            
+            filaComentario.innerHTML = `
+                <td>${comentario.customer_name}</td>
+                <td>${comentario.productid}</td>
+                <td>${comentario.comment}</td>
+                <td>${estrellas}</td>
+            `;
+            
+            tablaBody.appendChild(filaComentario);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar comentarios:', error);
+        const contenedorComentarios = document.getElementById('comentarios-container');
+        contenedorComentarios.innerHTML = `
+            <div class="alert alert-danger text-center" role="alert">
+                Error al cargar los comentarios: ${error.message}
+            </div>
+        `;
+    }
+}
+// Llamar a la función para cargar comentarios cuando la página se carga
+document.addEventListener('DOMContentLoaded', cargarTodosLosComentarios);
+
+  // Evento para cargar comentarios cuando se ingresa un ID de producto
+  document.getElementById('productoId').addEventListener('change', function () {
+    const productoId = this.value;
+    if (productoId) {
+      cargarComentarios(productoId);
+    }
+  });
+  </script>
 </body>
+
 </html>
